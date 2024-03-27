@@ -10,6 +10,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.cursofirebase.presentation.nvgraph.NavGraph
+import com.example.cursofirebase.presentation.nvgraph.Route
+import com.example.cursofirebase.presentation.nvgraph.RouteData
+import com.example.cursofirebase.presentation.nvgraph.RouteData.Homesec
 import com.example.cursofirebase.ui.theme.CursoFirebaseTheme
 
 class MainActivity : ComponentActivity() {
@@ -17,30 +21,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             CursoFirebaseTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    Greeting("Android")
-                }
+                NavGraph(startDestination = Route.Login.route)
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    CursoFirebaseTheme {
-        Greeting("Android")
     }
 }
