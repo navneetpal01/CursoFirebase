@@ -9,8 +9,14 @@ import androidx.activity.enableEdgeToEdge
 import com.example.cursofirebase.presentation.nvgraph.NavGraph
 import com.example.cursofirebase.presentation.nvgraph.Route
 import com.example.cursofirebase.ui.theme.CursoFirebaseTheme
+import com.google.firebase.Firebase
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.analytics
+import com.google.firebase.app
 
 class MainActivity : ComponentActivity() {
+
+    private lateinit var analytics : FirebaseAnalytics
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge(
             statusBarStyle = SystemBarStyle.light(
@@ -19,9 +25,13 @@ class MainActivity : ComponentActivity() {
             )
         )
         super.onCreate(savedInstanceState)
+        analytics = Firebase.analytics
         setContent {
             CursoFirebaseTheme {
-                NavGraph(startDestination = Route.Login.route)
+                NavGraph(
+                    startDestination = Route.Login.route,
+                    analytics = analytics
+                )
             }
         }
     }

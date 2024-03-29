@@ -1,5 +1,6 @@
 package com.example.cursofirebase.presentation.login
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,13 +30,18 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.provider.FontRequest
+import com.example.cursofirebase.presentation.nvgraph.TrackScreen
 import com.example.cursofirebase.ui.theme.Purple40
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.logEvent
 
+@SuppressLint("InvalidAnalyticsName")
 @Composable
 fun Login(
+    analytics: FirebaseAnalytics,
     navigateToHome: () -> Unit
 ) {
+    TrackScreen(string = "Entered Login Screen", analytics = analytics)
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -45,7 +51,12 @@ fun Login(
                 .align(Alignment.BottomCenter)
                 .padding(50.dp),
             text = AnnotatedString("You do have an account? sign up"),
-            onClick = {},
+            onClick = {
+                analytics.logEvent("configuration"){
+                    param("value1","does not have an account")
+                    param("value2","new user registration")
+                }
+            },
             style = TextStyle(
                 fontSize = 14.sp,
                 fontFamily = FontFamily.Default,
@@ -113,7 +124,11 @@ fun Login(
 
         ClickableText(
             text = AnnotatedString("Did you forget your password?"),
-            onClick = {},
+            onClick = {
+                analytics.logEvent("configuration"){
+                    param("value1","forgot password")
+                }
+            },
             style = TextStyle(
                 fontSize = 14.sp,
                 fontFamily = FontFamily.Default,
