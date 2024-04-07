@@ -7,7 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.cursofirebase.presentation.Home
+import com.example.cursofirebase.presentation.HomeScreen
 import com.example.cursofirebase.presentation.Screen
 import com.example.cursofirebase.presentation.auth.ForgotPasswordScreen
 import com.example.cursofirebase.presentation.auth.Login
@@ -35,7 +35,7 @@ fun NavGraph(
                 )
             }
             composable(route = Route.Home.route) {
-                Home(
+                HomeScreen(
                     analytics = analytics,
                     navigation = navController
                 )
@@ -46,7 +46,7 @@ fun NavGraph(
                     navigation = navController
                 )
             }
-            composable(route = Route.ForgotPassword.route){
+            composable(route = Route.ForgotPassword.route) {
                 ForgotPasswordScreen(
                     analytics = analytics,
                     navigation = navController
