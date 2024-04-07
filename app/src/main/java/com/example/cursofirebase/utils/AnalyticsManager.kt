@@ -19,6 +19,12 @@ class AnalyticsManager(
 //    private val analyticsManager2 : FirebaseAnalytics by lazy { Firebase.analytics}
 
 
+//    TODO Can use this function to make the things little easy
+//    fun logEvent(string : String, bundle : Bundle){
+//        analyticsManager.logEvent(string,bundle)
+//    }
+
+
     fun logButtonClicked(buttonName: String) {
         val params = Bundle().apply {
 //          Putting a Key-Value Pair
@@ -51,3 +57,12 @@ class AnalyticsManager(
 
 
 }
+
+
+
+
+//TODO - BEFORE
+//analytics.logEvent("configuration") {
+//    param("value1", "does not have an account")
+//    param("value2", "new user registration")
+//}

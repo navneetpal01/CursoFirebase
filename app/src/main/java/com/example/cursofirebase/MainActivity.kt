@@ -16,7 +16,7 @@ import com.google.firebase.app
 
 class MainActivity : ComponentActivity() {
 
-    private lateinit var analytics : FirebaseAnalytics
+//    private lateinit var analytics : FirebaseAnalytics
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge(
             statusBarStyle = SystemBarStyle.light(
@@ -25,12 +25,12 @@ class MainActivity : ComponentActivity() {
             )
         )
         super.onCreate(savedInstanceState)
-        analytics = Firebase.analytics
+//        analytics = Firebase.analytics
         setContent {
             CursoFirebaseTheme {
                 NavGraph(
                     startDestination = Route.Login.route,
-                    analytics = analytics
+                    this
                 )
             }
         }
