@@ -17,15 +17,5 @@ fun Home(
     analytics: AnalyticsManager,
     navigation : NavController
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            text = "Start",
-            fontSize = 40.sp
-        )
-    }
+
 }

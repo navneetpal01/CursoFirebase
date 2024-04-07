@@ -1,27 +1,36 @@
 package com.example.cursofirebase.presentation.auth
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
@@ -132,12 +141,12 @@ fun Login(
         ClickableText(
             text = AnnotatedString("Did you forget your password?"),
             onClick = {
-                      navigation.navigate(Route.ForgotPassword.route){
-                          popUpTo(Route.Login.route){
-                              inclusive = true
-                          }
-                      }
-                analytics.logButtonClicked("Click: ")
+                navigation.navigate(Route.ForgotPassword.route) {
+                    popUpTo(Route.Login.route) {
+                        inclusive = true
+                    }
+                }
+                analytics.logButtonClicked("Click: Did you forget your password?")
             },
             style = TextStyle(
                 fontSize = 14.sp,
@@ -147,5 +156,83 @@ fun Login(
             )
         )
 
+        Spacer(modifier = Modifier.height(25.dp))
+
+        Text(
+            text = "-------- o --------",
+            style = TextStyle(
+                color = Color.Gray
+            )
+        )
+
+        Spacer(modifier = Modifier.height(25.dp))
+
+        SocialMediaButton(
+            onClick = {
+
+            },
+            text = "Continue as a guest",
+            icon = R.drawable.ic_incognito,
+            color = Color(0xFF363636)
+        )
+
+        Spacer(modifier = Modifier.height(15.dp))
+
+        SocialMediaButton(
+            onClick = {
+
+            },
+            text = "Continue with Google",
+            icon = R.drawable.ic_google,
+            color = Color(0xFFF1F1F1)
+        )
+
+
+    }
+}
+
+@Composable
+fun SocialMediaButton(
+    onClick: () -> Unit,
+    text: String,
+    icon: Int,
+    color: Color
+) {
+    var click by remember { mutableStateOf(false) }
+    Surface(
+        modifier = Modifier
+            .padding(start = 40.dp, end = 40.dp)
+            .clickable {
+                click = !click
+            },
+        onClick = onClick,
+        shape = RoundedCornerShape(50.dp),
+        border = BorderStroke(
+            width = 1.dp,
+            color = if (icon == R.drawable.ic_incognito) color else Color.Gray
+        ),
+        color = color
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 12.dp, end = 12.dp, top = 12.dp, bottom = 12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Icon(
+                modifier = Modifier
+                    .size(24.dp),
+                painter = painterResource(id = icon),
+                contentDescription = "text",
+                tint = Color.Unspecified
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(
+                text = "$text",
+                color = if (icon == R.drawable.ic_incognito) Color.White else Color.Black
+            )
+            click = true
+        }
     }
 }
