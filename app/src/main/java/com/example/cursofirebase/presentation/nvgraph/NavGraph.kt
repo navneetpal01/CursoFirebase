@@ -15,21 +15,26 @@ import com.example.cursofirebase.presentation.auth.Login
 import com.example.cursofirebase.presentation.auth.SignUpScreen
 import com.example.cursofirebase.utils.AnalyticsManager
 import com.example.cursofirebase.utils.AuthManager
+import com.google.firebase.auth.FirebaseUser
 
 @Composable
 fun NavGraph(
-    startDestination: String,
     context: Context
 ) {
     val navController = rememberNavController()
     val analytics: AnalyticsManager = AnalyticsManager(context)
     val authManager : AuthManager = AuthManager()
+
+    val user : FirebaseUser? = authManager.getCurrentUser()
+
+
+
     Screen {
         NavHost(
             modifier = Modifier
                 .fillMaxSize(),
             navController = navController,
-            startDestination = startDestination
+            startDestination = if (user == null) Route.Login.route else Route.Home.route
         ) {
             composable(route = Route.Login.route) {
                 Login(

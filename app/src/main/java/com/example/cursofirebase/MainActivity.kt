@@ -29,7 +29,6 @@ class MainActivity : ComponentActivity() {
         setContent {
             CursoFirebaseTheme {
                 NavGraph(
-                    startDestination = Route.Login.route,
                     this
                 )
             }
