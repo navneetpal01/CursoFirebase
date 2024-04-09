@@ -70,8 +70,9 @@ dependencies {
 
     //Firebase
     implementation(platform(libs.google.firebase.bom))
+    //Analytics
     implementation(libs.google.firebase.analytics)
-
+    implementation(libs.firebase.auth)
     /** Real Format
      *  // Add the dependency for the Google services Gradle plugin
      *   id("com.google.gms.google-services") version "4.4.1" apply false
