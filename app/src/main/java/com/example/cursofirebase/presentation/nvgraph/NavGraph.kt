@@ -41,7 +41,8 @@ fun NavGraph(
             composable(route = Route.Home.route) {
                 HomeScreen(
                     analytics = analytics,
-                    navigation = navController
+                    navigation = navController,
+                    authManager = authManager
                 )
             }
             composable(route = Route.SignUp.route) {

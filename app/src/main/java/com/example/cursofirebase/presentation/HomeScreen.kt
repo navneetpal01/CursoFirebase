@@ -32,18 +32,25 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.cursofirebase.presentation.nvgraph.Route
 import com.example.cursofirebase.utils.AnalyticsManager
+import com.example.cursofirebase.utils.AuthManager
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     analytics: AnalyticsManager,
-    navigation: NavController
+    navigation: NavController,
+    authManager : AuthManager
 ) {
     analytics.LogScreenView(screenName = Route.Home.route)
     val navController = rememberNavController()
     var showDialog by remember { mutableStateOf(false) }
     val onLoggedOutConfirmed: () -> Unit = {
-
+        authManager.signOut()
+        navigation.navigate(Route.Login.route){
+            popUpTo(Route.Home.route){
+                inclusive = true
+            }
+        }
     }
     Scaffold(
         topBar = {
@@ -139,17 +146,6 @@ fun LogoutDialog(
 
     )
 }
-
-
-@Composable
-fun BottomBar(navController: NavController) {
-
-
-}
-
-
-
-
 
 
 

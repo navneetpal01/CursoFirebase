@@ -26,5 +26,9 @@ class AuthManager {
             AuthRes.Error(errorMessage = e.message ?: "Login failed")
         }
     }
+
+    fun signOut(){
+        auth.signOut()
+    }
 }
 

@@ -206,10 +206,15 @@ fun Login(
 private suspend fun incognitoSignIn(auth: AuthManager, analytics: AnalyticsManager, context: Context, navigation: NavController) {
     when(val result = auth.signInAnonymously()){
         is AuthRes.Error -> {
-
+            analytics.logError("Error SignIn Incognito ${result.errorMessage}")
         }
         is AuthRes.Success -> {
-
+            analytics.logButtonClicked(buttonName = "Click: Continue  as a guest")
+            navigation.navigate(Route.Home.route){
+                popUpTo(Route.Login.route){
+                    inclusive = true
+                }
+            }
         }
     }
 }
