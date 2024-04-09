@@ -1,6 +1,7 @@
 package com.example.cursofirebase.presentation.auth
 
 import android.annotation.SuppressLint
+import android.content.Context
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -27,10 +28,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
@@ -46,17 +49,23 @@ import com.example.cursofirebase.R
 import com.example.cursofirebase.presentation.nvgraph.Route
 import com.example.cursofirebase.ui.theme.Purple40
 import com.example.cursofirebase.utils.AnalyticsManager
+import com.example.cursofirebase.utils.AuthManager
+import com.example.cursofirebase.utils.AuthRes
+import kotlinx.coroutines.launch
 
 @SuppressLint("InvalidAnalyticsName")
 @Composable
 fun Login(
     analytics: AnalyticsManager,
-    navigation: NavController
+    navigation: NavController,
+    authManager: AuthManager
 ) {
     analytics.LogScreenView(screenName = Route.Login.route)
 
     val email = remember { mutableStateOf(TextFieldValue()) }
     val password = remember { mutableStateOf(TextFieldValue()) }
+    val scope = rememberCoroutineScope()
+    val context = LocalContext.current
 
     Box(
         modifier = Modifier
@@ -169,7 +178,9 @@ fun Login(
 
         SocialMediaButton(
             onClick = {
-
+                scope.launch {
+                    incognitoSignIn(auth = authManager, analytics = analytics, context = context, navigation = navigation)
+                }
             },
             text = "Continue as a guest",
             icon = R.drawable.ic_incognito,
@@ -190,6 +201,19 @@ fun Login(
 
     }
 }
+
+
+private suspend fun incognitoSignIn(auth: AuthManager, analytics: AnalyticsManager, context: Context, navigation: NavController) {
+    when(val result = auth.signInAnonymously()){
+        is AuthRes.Error -> {
+
+        }
+        is AuthRes.Success -> {
+
+        }
+    }
+}
+
 
 @Composable
 fun SocialMediaButton(

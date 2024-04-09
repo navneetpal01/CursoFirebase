@@ -10,7 +10,7 @@ import kotlinx.coroutines.tasks.await
 //Out T is like a seal
 sealed class AuthRes<out T> {
     data class Success<T>(val data: T) : AuthRes<T>()
-    data class Error<T>(val errorMessage: T) : AuthRes<Nothing>()
+    data class Error(val errorMessage: String) : AuthRes<Nothing>()
 }
 
 
@@ -27,3 +27,4 @@ class AuthManager {
         }
     }
 }
+

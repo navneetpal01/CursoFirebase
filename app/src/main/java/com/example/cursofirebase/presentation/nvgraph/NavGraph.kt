@@ -3,6 +3,7 @@ package com.example.cursofirebase.presentation.nvgraph
 import android.content.Context
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -13,6 +14,7 @@ import com.example.cursofirebase.presentation.auth.ForgotPasswordScreen
 import com.example.cursofirebase.presentation.auth.Login
 import com.example.cursofirebase.presentation.auth.SignUpScreen
 import com.example.cursofirebase.utils.AnalyticsManager
+import com.example.cursofirebase.utils.AuthManager
 
 @Composable
 fun NavGraph(
@@ -20,7 +22,8 @@ fun NavGraph(
     context: Context
 ) {
     val navController = rememberNavController()
-    var analytics: AnalyticsManager = AnalyticsManager(context)
+    val analytics: AnalyticsManager = AnalyticsManager(context)
+    val authManager : AuthManager = AuthManager()
     Screen {
         NavHost(
             modifier = Modifier
@@ -31,7 +34,8 @@ fun NavGraph(
             composable(route = Route.Login.route) {
                 Login(
                     analytics = analytics,
-                    navigation = navController
+                    navigation = navController,
+                    authManager = authManager
                 )
             }
             composable(route = Route.Home.route) {
