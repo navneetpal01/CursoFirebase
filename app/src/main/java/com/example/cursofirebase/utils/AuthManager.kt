@@ -34,6 +34,5 @@ class AuthManager {
     fun getCurrentUser() : FirebaseUser?{
         return auth.currentUser
     }
-    //Let's commit it and sleep for today cause I am f tired now please
 }
 
