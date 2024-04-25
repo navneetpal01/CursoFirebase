@@ -27,11 +27,36 @@ class AuthManager {
         }
     }
 
-    fun signOut(){
+    suspend fun createUserWithEmailAndPassword(
+        email: String,
+        password: String
+    ): AuthRes<FirebaseUser?> {
+        return try {
+            val authResult = auth.createUserWithEmailAndPassword(email, password).await()
+            AuthRes.Success(data = authResult.user)
+        } catch (e: Exception) {
+            AuthRes.Error(errorMessage = e.message ?: "Error creating user")
+        }
+
+    }
+
+    suspend fun signInWithEmailAndPassword(
+        email: String,
+        password: String
+    ): AuthRes<FirebaseUser?> {
+        return try {
+            val authResult = auth.signInWithEmailAndPassword(email, password).await()
+            AuthRes.Success(data = authResult.user)
+        } catch (e: Exception) {
+            AuthRes.Error(errorMessage = e.message ?: "Login failed")
+        }
+    }
+
+    fun signOut() {
         auth.signOut()
     }
 
-    fun getCurrentUser() : FirebaseUser?{
+    fun getCurrentUser(): FirebaseUser? {
         return auth.currentUser
     }
 }

@@ -53,6 +53,7 @@ fun NavGraph(
             composable(route = Route.SignUp.route) {
                 SignUpScreen(
                     analytics = analytics,
+                    authManager = authManager,
                     navigation = navController
                 )
             }

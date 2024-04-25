@@ -1,5 +1,7 @@
 package com.example.cursofirebase.presentation.auth
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -35,10 +37,15 @@ import androidx.navigation.NavController
 import com.example.cursofirebase.presentation.nvgraph.Route
 import com.example.cursofirebase.ui.theme.Purple40
 import com.example.cursofirebase.utils.AnalyticsManager
+import com.example.cursofirebase.utils.AuthManager
+import com.example.cursofirebase.utils.AuthRes
+import com.google.firebase.analytics.FirebaseAnalytics
+import kotlinx.coroutines.launch
 
 @Composable
 fun SignUpScreen(
     analytics: AnalyticsManager,
+    authManager: AuthManager,
     navigation: NavController
 ) {
     analytics.LogScreenView(screenName = Route.SignUp.route)
@@ -68,7 +75,7 @@ fun SignUpScreen(
 
         TextField(
             label = {
-                    Text(text = "Email")
+                Text(text = "Email")
             },
             value = email,
             onValueChange = {
@@ -76,12 +83,12 @@ fun SignUpScreen(
             },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
         )
-        
+
         Spacer(modifier = Modifier.height(20.dp))
-        
+
         TextField(
             label = {
-                    Text(text = "Password")
+                Text(text = "Password")
             },
             value = password,
             onValueChange = {
@@ -95,13 +102,22 @@ fun SignUpScreen(
         Box(
             modifier = Modifier
                 .padding(start = 40.dp, top = 0.dp, end = 40.dp, bottom = 0.dp)
-        ){
+        ) {
             Button(
                 modifier = Modifier
                     .height(50.dp)
                     .fillMaxWidth(),
                 onClick = {
-
+                    scope.launch {
+                        signUp(
+                            email = email,
+                            password = password,
+                            auth = authManager,
+                            analytics = analytics,
+                            context = context,
+                            navigation = navigation
+                        )
+                    }
                 },
                 shape = RoundedCornerShape(50.dp)
             ) {
@@ -124,3 +140,44 @@ fun SignUpScreen(
 
     }
 }
+
+
+private suspend fun signUp(
+    email: String,
+    password: String,
+    auth: AuthManager,
+    analytics: AnalyticsManager,
+    context: Context,
+    navigation: NavController
+) {
+    if (email.isNotEmpty() && password.isNotEmpty()) {
+        when (val result = auth.createUserWithEmailAndPassword(email, password)) {
+            is AuthRes.Error -> {
+                analytics.logButtonClicked("Error SignUp: ${result.errorMessage}")
+                Toast.makeText(context, "Error SignUp: ${result.errorMessage}", Toast.LENGTH_SHORT)
+                    .show()
+
+            }
+
+            is AuthRes.Success -> {
+                analytics.logButtonClicked(FirebaseAnalytics.Event.SIGN_UP)
+                Toast.makeText(context, "Registration Successful", Toast.LENGTH_SHORT).show()
+                navigation.popBackStack()
+            }
+        }
+    } else {
+        Toast.makeText(context, "Empty fields exist", Toast.LENGTH_SHORT).show()
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
