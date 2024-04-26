@@ -59,7 +59,8 @@ fun NavGraph(
             composable(route = Route.ForgotPassword.route) {
                 ForgotPasswordScreen(
                     analytics = analytics,
-                    navigation = navController
+                    navigation = navController,
+                    authManager = authManager
                 )
             }
         }

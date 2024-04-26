@@ -52,6 +52,15 @@ class AuthManager {
         }
     }
 
+    suspend fun resetPassword(email : String) : AuthRes<Unit>{
+        return try {
+            auth.sendPasswordResetEmail(email).await()
+            AuthRes.Success(data = Unit)
+        }catch (e : Exception){
+            AuthRes.Error(errorMessage = e.message ?: "Error resetting password")
+        }
+    }
+
     fun signOut() {
         auth.signOut()
     }

@@ -1,5 +1,6 @@
 package com.example.cursofirebase.presentation.auth
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,11 +32,15 @@ import androidx.navigation.NavController
 import com.example.cursofirebase.presentation.nvgraph.Route
 import com.example.cursofirebase.ui.theme.Purple40
 import com.example.cursofirebase.utils.AnalyticsManager
+import com.example.cursofirebase.utils.AuthManager
+import com.example.cursofirebase.utils.AuthRes
+import kotlinx.coroutines.launch
 
 @Composable
 fun ForgotPasswordScreen(
     analytics: AnalyticsManager,
-    navigation: NavController
+    navigation: NavController,
+    authManager: AuthManager
 ) {
     analytics.LogScreenView(screenName = Route.ForgotPassword.route)
 
@@ -83,7 +88,20 @@ fun ForgotPasswordScreen(
                     .height(50.dp)
                     .fillMaxWidth(),
                 onClick = {
-
+                          scope.launch {
+                              when(val result = authManager.resetPassword(email)){
+                                  is AuthRes.Error -> {
+                                      analytics.logError(error = "Reset password error $email : ${result.errorMessage}")
+                                      Toast.makeText(context,"Error sending mail",Toast.LENGTH_LONG).show()
+                                      navigation.navigate(Route.Login.route)
+                                  }
+                                  is AuthRes.Success -> {
+                                      analytics.logButtonClicked(buttonName = "Reset password $email")
+                                      Toast.makeText(context,"Email sent",Toast.LENGTH_LONG).show()
+                                      navigation.navigate(Route.Login.route)
+                                  }
+                              }
+                          }
             },
                 shape = RoundedCornerShape(50.dp)
             ) {
