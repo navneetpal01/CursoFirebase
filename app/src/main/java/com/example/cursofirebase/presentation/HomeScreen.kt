@@ -1,12 +1,15 @@
 package com.example.cursofirebase.presentation
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material3.AlertDialog
@@ -25,11 +28,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.cursofirebase.R
 import com.example.cursofirebase.presentation.nvgraph.Route
 import com.example.cursofirebase.utils.AnalyticsManager
 import com.example.cursofirebase.utils.AuthManager
@@ -39,15 +45,17 @@ import com.example.cursofirebase.utils.AuthManager
 fun HomeScreen(
     analytics: AnalyticsManager,
     navigation: NavController,
-    authManager : AuthManager
+    authManager: AuthManager
 ) {
     analytics.LogScreenView(screenName = Route.Home.route)
     val navController = rememberNavController()
+    //Returns the object of the Firebase User
+    val user = authManager.getCurrentUser()
     var showDialog by remember { mutableStateOf(false) }
     val onLoggedOutConfirmed: () -> Unit = {
         authManager.signOut()
-        navigation.navigate(Route.Login.route){
-            popUpTo(Route.Home.route){
+        navigation.navigate(Route.Login.route) {
+            popUpTo(Route.Home.route) {
                 inclusive = true
             }
         }
@@ -60,16 +68,29 @@ fun HomeScreen(
                         horizontalArrangement = Arrangement.Start,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
+                        if (user?.photoUrl != null) {
+
+                        } else {
+                            Image(
+                                painter = painterResource(id = R.drawable.profile),
+                                contentDescription = "Default profile photo",
+                                modifier = Modifier
+                                    .padding(end = 8.dp)
+                                    .size(40.dp)
+                                    .clip(CircleShape)
+
+                            )
+                        }
                         Spacer(modifier = Modifier.width(10.dp))
                         Column {
                             Text(
-                                text = "welcome",
+                                text = if (!user?.displayName.isNullOrEmpty()) "Hello ${user?.displayName}" else "Welcome",
                                 fontSize = 20.sp,
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis
                             )
                             Text(
-                                text = "user",
+                                text = if (!user?.email.isNullOrEmpty()) "${user?.email}" else "Anonymous",
                                 fontSize = 12.sp,
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis
