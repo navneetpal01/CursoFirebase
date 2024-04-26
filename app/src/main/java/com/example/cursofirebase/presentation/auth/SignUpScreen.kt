@@ -154,21 +154,27 @@ private suspend fun signUp(
         when (val result = auth.createUserWithEmailAndPassword(email, password)) {
             is AuthRes.Error -> {
                 analytics.logButtonClicked("Error SignUp: ${result.errorMessage}")
-                Toast.makeText(context, "Error SignUp: ${result.errorMessage}", Toast.LENGTH_SHORT)
+                Toast.makeText(context, "Error SignUp: ${result.errorMessage}", Toast.LENGTH_LONG)
                     .show()
 
             }
 
             is AuthRes.Success -> {
                 analytics.logButtonClicked(FirebaseAnalytics.Event.SIGN_UP)
-                Toast.makeText(context, "Registration Successful", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Registration Successful", Toast.LENGTH_LONG).show()
                 navigation.popBackStack()
             }
         }
     } else {
-        Toast.makeText(context, "Empty fields exist", Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, "Empty fields exist", Toast.LENGTH_LONG).show()
     }
 }
+
+
+
+
+
+
 
 
 

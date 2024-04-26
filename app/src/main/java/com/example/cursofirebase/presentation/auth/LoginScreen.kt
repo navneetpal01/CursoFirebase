@@ -2,6 +2,7 @@ package com.example.cursofirebase.presentation.auth
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -58,12 +59,12 @@ import kotlinx.coroutines.launch
 fun Login(
     analytics: AnalyticsManager,
     navigation: NavController,
-    authManager: AuthManager
+    auth: AuthManager
 ) {
     analytics.LogScreenView(screenName = Route.Login.route)
 
-    val email = remember { mutableStateOf(TextFieldValue()) }
-    val password = remember { mutableStateOf(TextFieldValue()) }
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
 
@@ -112,20 +113,20 @@ fun Login(
 
         TextField(
             label = { Text(text = "Email") },
-            value = email.value,
+            value = email,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
             onValueChange = { value ->
-                email.value = value
+                email = value
             }
         )
         Spacer(modifier = Modifier.height(20.dp))
         TextField(
             label = { Text(text = "Password") },
-            value = password.value,
+            value = password,
             visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             onValueChange = { value ->
-                password.value = value
+                password = value
             }
         )
 
@@ -137,7 +138,9 @@ fun Login(
                     .fillMaxWidth()
                     .height(50.dp),
                 onClick = {
-
+                          scope.launch {
+                              emailPassSignIn(email,password,auth,analytics,context,navigation)
+                          }
                 },
                 shape = RoundedCornerShape(50.dp),
             ) {
@@ -179,7 +182,7 @@ fun Login(
         SocialMediaButton(
             onClick = {
                 scope.launch {
-                    incognitoSignIn(auth = authManager, analytics = analytics, context = context, navigation = navigation)
+                    incognitoSignIn(auth = auth, analytics = analytics, context = context, navigation = navigation)
                 }
             },
             text = "Continue as a guest",
@@ -199,6 +202,27 @@ fun Login(
         )
 
 
+    }
+}
+
+private suspend fun emailPassSignIn(email: String, password: String, auth: AuthManager, analytics: AnalyticsManager, context: Context, navigation: NavController) {
+    if (email.isNotEmpty() && password.isNotEmpty()){
+        when(val result = auth.signInWithEmailAndPassword(email,password)){
+            is AuthRes.Error -> {
+                analytics.logButtonClicked("Error SignUp: ${result.errorMessage}")
+                Toast.makeText(context,"Error SignUp: ${result.errorMessage}",Toast.LENGTH_LONG).show()
+            }
+            is AuthRes.Success -> {
+                analytics.logButtonClicked("Click: Login email & password")
+                navigation.navigate(Route.Home.route){
+                    popUpTo(Route.Login.route){
+                        inclusive = true
+                    }
+                }
+            }
+        }
+    }else{
+        Toast.makeText(context,"Empty field exists",Toast.LENGTH_LONG).show()
     }
 }
 

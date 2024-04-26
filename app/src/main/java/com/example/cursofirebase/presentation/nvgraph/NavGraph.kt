@@ -3,7 +3,6 @@ package com.example.cursofirebase.presentation.nvgraph
 import android.content.Context
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -40,7 +39,7 @@ fun NavGraph(
                 Login(
                     analytics = analytics,
                     navigation = navController,
-                    authManager = authManager
+                    auth = authManager
                 )
             }
             composable(route = Route.Home.route) {
