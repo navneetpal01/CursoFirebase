@@ -10,7 +10,10 @@ activityCompose = "1.8.2"
 composeBom = "2023.08.00"
 composeNavigation = "2.7.6"
 firebaseBom = "32.8.0"
+firebaseGoogleAuth = "21.1.0"
 gms = "4.4.1"
+
+
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -30,6 +33,7 @@ androidx-navigation = {module = "androidx.navigation:navigation-compose", versio
 google-firebase-bom = {module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom"}
 google-firebase-analytics = { module = "com.google.firebase:firebase-analytics", name = "firebase-analystics"}
 firebase-auth = { module = "com.google.firebase:firebase-auth", name = "firebase-auth"}
+firebase-google-auth = {module = "com.google.android.gms:play-services-auth", version.ref = "firebaseGoogleAuth"}
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
