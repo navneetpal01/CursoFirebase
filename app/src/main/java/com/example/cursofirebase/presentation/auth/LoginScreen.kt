@@ -81,6 +81,17 @@ fun Login(
             }
             is AuthRes.Success -> {
                 val credential = GoogleAuthProvider.getCredential(account?.data?.idToken,null)
+                scope.launch {
+                    val fireUser = auth.signInWithGoogleCredential(credential)
+                    if (fireUser != null){
+                        Toast.makeText(context,"Welcome",Toast.LENGTH_LONG).show()
+                        navigation.navigate(Route.Home.route){
+                            popUpTo(Route.Login.route){
+                                inclusive = true
+                            }
+                        }
+                    }
+                }
             }
             else -> {
                 Toast.makeText(context,"Unknown error",Toast.LENGTH_LONG).show()
@@ -214,7 +225,7 @@ fun Login(
 
         SocialMediaButton(
             onClick = {
-
+                      auth.signInWithGoogle(googleSignInLauncher)
             },
             text = "Continue with Google",
             icon = R.drawable.ic_google,

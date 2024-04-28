@@ -12,6 +12,7 @@ composeNavigation = "2.7.6"
 firebaseBom = "32.8.0"
 firebaseGoogleAuth = "21.1.0"
 gms = "4.4.1"
+coil-compose = "2.4.0"
 
 
 [libraries]
@@ -34,6 +35,7 @@ google-firebase-bom = {module = "com.google.firebase:firebase-bom", version.ref 
 google-firebase-analytics = { module = "com.google.firebase:firebase-analytics", name = "firebase-analystics"}
 firebase-auth = { module = "com.google.firebase:firebase-auth", name = "firebase-auth"}
 firebase-google-auth = {module = "com.google.android.gms:play-services-auth", version.ref = "firebaseGoogleAuth"}
+coil-compose = { module = "io.coil-kt:coil-compose", name = "coil-compose", version.ref = "coil-compose"}
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

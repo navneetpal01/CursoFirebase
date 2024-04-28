@@ -4,7 +4,9 @@ import android.content.Context
 import android.content.Intent
 import android.net.wifi.hotspot2.pps.Credential
 import androidx.activity.result.ActivityResultLauncher
+import androidx.compose.runtime.clearCompositionErrors
 import com.example.cursofirebase.R
+import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -31,6 +33,8 @@ class AuthManager(
 ){
     //using the slow delegation
     private val auth: FirebaseAuth by lazy { Firebase.auth }
+    private val signInClient = Identity.getSignInClient(context)
+
 
     suspend fun signInAnonymously(): AuthRes<FirebaseUser> {
         return try {
@@ -77,6 +81,7 @@ class AuthManager(
 
     fun signOut() {
         auth.signOut()
+        signInClient.signOut()
     }
 
     fun getCurrentUser(): FirebaseUser? {
