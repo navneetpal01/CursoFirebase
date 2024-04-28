@@ -22,7 +22,7 @@ fun NavGraph(
 ) {
     val navController = rememberNavController()
     val analytics: AnalyticsManager = AnalyticsManager(context)
-    val authManager : AuthManager = AuthManager()
+    val authManager : AuthManager = AuthManager(context)
 
     val user : FirebaseUser? = authManager.getCurrentUser()
 

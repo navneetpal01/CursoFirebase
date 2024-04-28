@@ -1,6 +1,18 @@
 package com.example.cursofirebase.utils
 
+import android.content.Context
+import android.content.Intent
+import android.net.wifi.hotspot2.pps.Credential
+import androidx.activity.result.ActivityResultLauncher
+import com.example.cursofirebase.R
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.tasks.Task
 import com.google.firebase.Firebase
+import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.auth
@@ -14,7 +26,9 @@ sealed class AuthRes<out T> {
 }
 
 
-class AuthManager {
+class AuthManager(
+    private val context : Context
+){
     //using the slow delegation
     private val auth: FirebaseAuth by lazy { Firebase.auth }
 
@@ -68,5 +82,54 @@ class AuthManager {
     fun getCurrentUser(): FirebaseUser? {
         return auth.currentUser
     }
+
+
+    private val googleSignInClient: GoogleSignInClient by lazy {
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(context.getString(R.string.default_web_client_id))
+            .requestEmail()
+            .build()
+        GoogleSignIn.getClient(context, gso)
+    }
+
+    fun handleSignInResult(task: Task<GoogleSignInAccount>): AuthRes<GoogleSignInAccount>? {
+        return try {
+            val account = task.getResult(ApiException::class.java)
+            AuthRes.Success(account)
+        } catch (e: ApiException) {
+            AuthRes.Error(e.message ?: "Google sign-in failed.")
+        }
+    }
+
+    suspend fun signInWithGoogleCredential(credential: AuthCredential): AuthRes<FirebaseUser>? {
+        return try {
+            val firebaseUser = auth.signInWithCredential(credential).await()
+            firebaseUser.user?.let {
+                AuthRes.Success(it)
+            } ?: throw Exception("Sign in with Google failed.")
+        } catch (e: Exception) {
+            AuthRes.Error(e.message ?: "Sign in with Google failed.")
+        }
+    }
+
+    fun signInWithGoogle(googleSignInLauncher: ActivityResultLauncher<Intent>) {
+        val signInIntent = googleSignInClient.signInIntent
+        googleSignInLauncher.launch(signInIntent)
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
 

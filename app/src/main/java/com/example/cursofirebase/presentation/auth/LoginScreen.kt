@@ -3,6 +3,8 @@ package com.example.cursofirebase.presentation.auth
 import android.annotation.SuppressLint
 import android.content.Context
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -52,6 +54,8 @@ import com.example.cursofirebase.ui.theme.Purple40
 import com.example.cursofirebase.utils.AnalyticsManager
 import com.example.cursofirebase.utils.AuthManager
 import com.example.cursofirebase.utils.AuthRes
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.firebase.auth.GoogleAuthProvider
 import kotlinx.coroutines.launch
 
 @SuppressLint("InvalidAnalyticsName")
@@ -67,6 +71,22 @@ fun Login(
     var password by remember { mutableStateOf("") }
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
+
+    val googleSignInLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()) {result->
+        when(val account = auth.handleSignInResult(GoogleSignIn.getSignedInAccountFromIntent(result.data))){
+            is AuthRes.Error -> {
+                analytics.logError("Error SignIn: ${account.errorMessage}")
+                Toast.makeText(context,"Error: ${account.errorMessage}",Toast.LENGTH_LONG).show()
+            }
+            is AuthRes.Success -> {
+                val credential = GoogleAuthProvider.getCredential(account?.data?.idToken,null)
+            }
+            else -> {
+                Toast.makeText(context,"Unknown error",Toast.LENGTH_LONG).show()
+            }
+        }
+    }
 
     Box(
         modifier = Modifier
